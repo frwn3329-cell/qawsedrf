@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♛ SIN OSINT - Fharaoh Sultan</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --gold: #d4af37;
+    --gold-light: #f0d060;
+    --gold-dark: #a8882a;
+    --black: #0a0a0a;
+    --dark-card: rgba(17, 17, 30, 0.92);
+    --white: #f5f5f5;
+    --text-muted: #8888aa;
+    --border-gold: 1px solid rgba(212, 175, 55, 0.3);
+    --shadow-gold: 0 0 40px rgba(212, 175, 55, 0.1);
+    --radius: 20px;
+}
+body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+.bg-particles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+}
+.bg-particles::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(212, 175, 55, 0.4), transparent),
+        radial-gradient(1px 1px at 30% 60%, rgba(212, 175, 55, 0.3), transparent),
+        radial-gradient(1px 1px at 50% 10%, rgba(212, 175, 55, 0.5), transparent),
+        radial-gradient(1px 1px at 70% 80%, rgba(212, 175, 55, 0.3), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(212, 175, 55, 0.4), transparent);
+    animation: sparkle 8s linear infinite;
+}
+@keyframes sparkle { 0%,100%{opacity:.5;} 50%{opacity:1;} }
+.container { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+/* ========== الهيدر ========== */
+.header { text-align: center; padding: 30px 20px 20px; }
+.header .logo {
+    font-size: 46px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), #f5d77b, var(--gold), var(--gold-light));
+    background-size: 300% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmerText 4s linear infinite;
+    letter-spacing: 4px; font-family: 'Cairo', sans-serif;
+}
+@keyframes shimmerText { 0%{background-position:0% center;} 100%{background-position:300% center;} }
+.header .sub { color: var(--text-muted); font-size: 14px; margin-top: 8px; }
+.header .sub .highlight { color: var(--gold); font-weight: 700; }
+
+/* شارة صاحب الموقع */
+.owner-badge {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 28px;
+    border: 2px solid var(--gold);
+    border-radius: 40px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+    box-shadow: 0 0 30px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.1);
+    animation: ownerGlow 2.5s ease-in-out infinite;
+}
+@keyframes ownerGlow {
+    0%,100% { box-shadow: 0 0 30px rgba(212,175,55,0.3), inset 0 0 20px rgba(212,175,55,0.1); }
+    50%     { box-shadow: 0 0 60px rgba(212,175,55,0.6), inset 0 0 30px rgba(212,175,55,0.2); }
+}
+.owner-badge .label { font-size: 11px; color: var(--text-muted); display: block; letter-spacing: 2px; margin-bottom: 2px; }
+.owner-badge .name {
+    font-size: 20px; font-weight: 900;
+    background: linear-gradient(90deg, var(--gold), #fff5c2, var(--gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmerText 3s linear infinite;
+    letter-spacing: 1px;
+}
+
+/* شارات المميزات */
+.badge-line { display: flex; justify-content: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.badge {
+    padding: 6px 18px; border: var(--border-gold); border-radius: 30px;
+    font-size: 11px; font-weight: 700; color: var(--gold);
+    background: rgba(212,175,55,0.06);
+}
+
+/* الدائرة */
+.hero-section { display: flex; justify-content: center; padding: 25px 0 20px; }
+.hero-circle { position: relative; width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; }
+.hero-circle .ring {
+    position: absolute; width: 100%; height: 100%; border-radius: 50%;
+    border: 2px solid transparent; animation: spinRing 6s linear infinite;
+}
+.hero-circle .ring:nth-child(1){border-top:3px solid var(--gold);animation-duration:4s;}
+.hero-circle .ring:nth-child(2){border-right:3px solid var(--gold-light);animation-duration:5s;animation-direction:reverse;width:110%;height:110%;top:-5%;left:-5%;}
+.hero-circle .ring:nth-child(3){border-bottom:3px solid var(--gold);animation-duration:3.5s;width:120%;height:120%;top:-10%;left:-10%;}
+.hero-circle .ring:nth-child(4){border-left:3px solid var(--gold-dark);animation-duration:4.5s;animation-direction:reverse;width:90%;height:90%;top:5%;left:5%;}
+@keyframes spinRing { to { transform: rotate(360deg); } }
+.hero-circle .center-image {
+    width: 125px; height: 125px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #1a1a2e, #0a0a12);
+    border: 2px solid rgba(212,175,55,0.3);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 55px; color: var(--gold);
+    box-shadow: 0 0 50px rgba(212,175,55,0.15), inset 0 0 50px rgba(212,175,55,0.05);
+    z-index: 2;
+}
+.hero-circle .center-image i { animation: pulseIcon 3s ease-in-out infinite; }
+@keyframes pulseIcon { 0%,100%{transform:scale(1);opacity:.8;} 50%{transform:scale(1.1);opacity:1;} }
+
+/* معلومات IP */
+.ip-info {
+    background: var(--dark-card); border: var(--border-gold);
+    border-radius: var(--radius); padding: 20px; margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+}
+.ip-info .title { color: var(--gold); font-size: 17px; font-weight: 800; margin-bottom: 15px; text-align: center; }
+.ip-info .row {
+    display: flex; justify-content: space-between; padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.ip-info .row:last-child { border-bottom: none; }
+.ip-info .row .key { color: var(--text-muted); font-weight: 700; font-size: 13px; }
+.ip-info .row .val { color: var(--white); font-weight: 600; font-size: 13px; }
+
+/* ===== كروت البحث ===== */
+.search-card {
+    background: var(--dark-card); backdrop-filter: blur(16px);
+    border: var(--border-gold); border-radius: var(--radius);
+    padding: 30px 25px; margin-bottom: 25px;
+    transition: all 0.4s; box-shadow: var(--shadow-gold);
+}
+.search-card:hover { border-color: rgba(212,175,55,0.5); }
+.search-card .title-area { text-align: center; margin-bottom: 20px; }
+.search-card .title-area h2 {
+    font-size: 22px; font-weight: 800; color: var(--white);
+    letter-spacing: 1px;
+}
+.search-card .title-area h2 i { color: var(--gold); margin-left: 10px; }
+.search-card .title-area h2 .fb-icon { color: #1877f2; }
+.search-card .title-area p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
+
+.country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    gap: 10px; margin-bottom: 20px;
+}
+.country-btn {
+    padding: 12px 6px; background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;
+    color: var(--text-muted); font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.4s; text-align: center;
+    font-family: 'Cairo', sans-serif;
+}
+.country-btn:hover { background: rgba(212,175,55,0.08); border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.country-btn.active { background: rgba(212,175,55,0.12); border-color: var(--gold); color: var(--gold); }
+.country-btn .code { display: block; font-size: 16px; font-weight: 900; color: var(--white); }
+.country-btn .name { font-size: 10px; opacity: 0.6; }
+.country-btn.active .code { color: var(--gold); }
+
+.input-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.input-wrap { flex: 1; min-width: 200px; position: relative; }
+.input-wrap .prefix {
+    position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--gold); font-weight: 800; font-size: 15px;
+    pointer-events: none;
+}
+.input-wrap input {
+    width: 100%; padding: 16px 60px 16px 20px;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px; color: var(--white); font-size: 16px;
+    font-family: 'Cairo', sans-serif; transition: all 0.4s;
+    direction: ltr; text-align: right; font-weight: 600;
+}
+.input-wrap input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 25px rgba(212,175,55,0.15); }
+.btn-search {
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border: none; border-radius: 14px; color: var(--black);
+    font-size: 16px; font-weight: 900; cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap; letter-spacing: 1px;
+    transition: all 0.4s;
+}
+.btn-search:hover { transform: scale(1.03); box-shadow: 0 0 50px rgba(212,175,55,0.35); }
+.btn-fb {
+    background: linear-gradient(135deg, #1877f2, #0d65d9);
+    color: #fff;
+}
+.btn-fb:hover { box-shadow: 0 0 50px rgba(24,119,242,0.4); }
+
+/* النتائج */
+.loader-area { display: none; text-align: center; padding: 40px 20px; }
+.loader-area .spinner {
+    width: 50px; height: 50px;
+    border: 3px solid rgba(212,175,55,0.08);
+    border-top: 3px solid var(--gold); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 15px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-area p { color: var(--text-muted); font-weight: 600; }
+
+.results-area { display: none; margin-top: 20px; }
+.results-area.active { display: block; }
+.result-header {
+    background: rgba(0,0,0,0.25); border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 14px; padding: 16px; margin-bottom: 16px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 12px;
+}
+.result-header .item { text-align: center; }
+.result-header .item .lbl { color: var(--text-muted); font-size: 11px; font-weight: 700; }
+.result-header .item .val { color: var(--gold); font-size: 16px; font-weight: 900; }
+
+.result-item {
+    background: rgba(0,0,0,0.3); border-radius: 14px;
+    padding: 18px 20px; margin-bottom: 12px;
+    border-right: 4px solid var(--gold);
+    transition: all 0.4s;
+}
+.result-item:hover { background: rgba(0,0,0,0.5); transform: translateX(-5px); }
+.result-item .row {
+    display: flex; justify-content: space-between; padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.result-item .row:last-child { border-bottom: none; }
+.result-item .row .key { color: var(--text-muted); font-size: 13px; font-weight: 700; }
+.result-item .row .val { color: var(--white); font-size: 14px; font-weight: 600; }
+.result-item .row .val a { color: var(--gold); text-decoration: none; }
+.result-item .row .val a.fb-link { color: #1877f2; font-weight: 800; }
+
+.fb-highlight {
+    background: linear-gradient(135deg, rgba(24,119,242,0.15), rgba(24,119,242,0.05));
+    border-right-color: #1877f2 !important;
+}
+.fb-highlight .row .val a { color: #1877f2; }
+
+.btn-group { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.btn-action {
+    flex: 1; min-width: 120px; padding: 12px;
+    border-radius: 12px; text-align: center; text-decoration: none;
+    font-weight: 800; font-size: 14px; transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-wa { background: #25D366; color: #fff; }
+.btn-tg { background: #0088cc; color: #fff; }
+.btn-fb-open { background: #1877f2; color: #fff; }
+.btn-action:hover { transform: scale(1.03); filter: brightness(1.1); }
+
+.no-results { text-align: center; padding: 30px; color: var(--text-muted); }
+.no-results i { font-size: 35px; display: block; margin-bottom: 10px; color: var(--gold); }
+
+/* الفوتر */
+.footer {
+    text-align: center; padding: 30px 20px 20px;
+    margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.03);
+}
+.footer .dev-name {
+    font-size: 18px; font-weight: 900;
+    background: linear-gradient(90deg, var(--gold), #fff5c2, var(--gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmerText 3s linear infinite;
+    letter-spacing: 1px;
+}
+.footer .dev-handle {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 22px;
+    border: 1px solid var(--gold);
+    border-radius: 30px;
+    background: rgba(212,175,55,0.08);
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(212,175,55,0.2);
+    transition: all 0.3s;
+}
+.footer .dev-handle:hover {
+    background: rgba(212,175,55,0.15);
+    box-shadow: 0 0 35px rgba(212,175,55,0.4);
+    transform: scale(1.05);
+}
+.footer .copyright { color: #555; font-size: 12px; margin-top: 15px; }
+
+@media (max-width: 768px) {
+    .header .logo { font-size: 32px; }
+    .input-row { flex-direction: column; }
+    .btn-search { width: 100%; justify-content: center; }
+    .country-grid { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+    .owner-badge { padding: 10px 20px; }
+    .owner-badge .name { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-particles"></div>
+
+<div class="container">
+
+    <!-- الهيدر -->
+    <div class="header">
+        <div class="logo">SIN OSINT</div>
+        <div class="sub">منصة البحث الشاملة | <span class="highlight">@SIN_PHP</span></div>
+
+        <!-- شارة صاحب الموقع -->
+        <div class="owner-badge">
+            <span class="label">صاحب الموقع</span>
+            <span class="name">𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵. 𖣈</span>
+        </div>
+
+        <div class="badge-line">
+            <span class="badge"><i class="fas fa-shield-alt"></i> آمن</span>
+            <span class="badge"><i class="fas fa-bolt"></i> فوري</span>
+            <span class="badge"><i class="fas fa-globe"></i> كل الدول العربية</span>
+        </div>
+    </div>
+
+    <!-- الدائرة -->
+    <div class="hero-section">
+        <div class="hero-circle">
+            <div class="ring"></div><div class="ring"></div>
+            <div class="ring"></div><div class="ring"></div>
+            <div class="center-image"><i class="fas fa-eye"></i></div>
+        </div>
+    </div>
+
+    <!-- معلومات IP -->
+    <div class="ip-info">
+        <div class="title"><i class="fas fa-network-wired"></i> معلومات اتصالك</div>
+        <div class="row"><span class="key">عنوان IP</span><span class="val" id="userIP">جاري التحميل...</span></div>
+        <div class="row"><span class="key">الدولة</span><span class="val" id="userCountry">جاري التحميل...</span></div>
+        <div class="row"><span class="key">المدينة</span><span class="val" id="userCity">جاري التحميل...</span></div>
+        <div class="row"><span class="key">المزود</span><span class="val" id="userISP">جاري التحميل...</span></div>
+    </div>
+
+    <!-- ============== خانة البحث بالرقم ============== -->
+    <div class="search-card">
+        <div class="title-area">
+            <h2><i class="fas fa-search"></i> البحث عن أي رقم عربي</h2>
+            <p>مصر • العراق • اليمن • السعودية • الإمارات • وكل الدول العربية</p>
+        </div>
+
+        <div class="country-grid" id="countryGrid">
+            <div class="country-btn active" data-code="20"><span class="code">+20</span><span class="name">مصر</span></div>
+            <div class="country-btn" data-code="964"><span class="code">+964</span><span class="name">العراق</span></div>
+            <div class="country-btn" data-code="967"><span class="code">+967</span><span class="name">اليمن</span></div>
+            <div class="country-btn" data-code="966"><span class="code">+966</span><span class="name">السعودية</span></div>
+            <div class="country-btn" data-code="971"><span class="code">+971</span><span class="name">الإمارات</span></div>
+            <div class="country-btn" data-code="962"><span class="code">+962</span><span class="name">الأردن</span></div>
+            <div class="country-btn" data-code="961"><span class="code">+961</span><span class="name">لبنان</span></div>
+            <div class="country-btn" data-code="965"><span class="code">+965</span><span class="name">الكويت</span></div>
+            <div class="country-btn" data-code="974"><span class="code">+974</span><span class="name">قطر</span></div>
+            <div class="country-btn" data-code="973"><span class="code">+973</span><span class="name">البحرين</span></div>
+            <div class="country-btn" data-code="968"><span class="code">+968</span><span class="name">عمان</span></div>
+            <div class="country-btn" data-code="212"><span class="code">+212</span><span class="name">المغرب</span></div>
+            <div class="country-btn" data-code="213"><span class="code">+213</span><span class="name">الجزائر</span></div>
+            <div class="country-btn" data-code="216"><span class="code">+216</span><span class="name">تونس</span></div>
+            <div class="country-btn" data-code="218"><span class="code">+218</span><span class="name">ليبيا</span></div>
+            <div class="country-btn" data-code="249"><span class="code">+249</span><span class="name">السودان</span></div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-wrap">
+                <span class="prefix" id="phonePrefix">+20</span>
+                <input type="text" id="phoneInput" placeholder="أدخل رقم الهاتف..." dir="ltr">
+            </div>
+            <button class="btn-search" onclick="searchByPhone()">
+                <i class="fas fa-search"></i> بحث
+            </button>
+        </div>
+    </div>
+
+    <!-- ============== خانة البحث بالفيسبوك ============== -->
+    <div class="search-card">
+        <div class="title-area">
+            <h2><i class="fab fa-facebook fb-icon"></i> البحث عن حساب فيسبوك</h2>
+            <p>اربط الرقم بحسابه على فيسبوك فوراً</p>
+        </div>
+
+        <div class="country-grid" id="countryGridFb">
+            <div class="country-btn active" data-code="20"><span class="code">+20</span><span class="name">مصر</span></div>
+            <div class="country-btn" data-code="964"><span class="code">+964</span><span class="name">العراق</span></div>
+            <div class="country-btn" data-code="967"><span class="code">+967</span><span class="name">اليمن</span></div>
+            <div class="country-btn" data-code="966"><span class="code">+966</span><span class="name">السعودية</span></div>
+            <div class="country-btn" data-code="971"><span class="code">+971</span><span class="name">الإمارات</span></div>
+            <div class="country-btn" data-code="962"><span class="code">+962</span><span class="name">الأردن</span></div>
+            <div class="country-btn" data-code="961"><span class="code">+961</span><span class="name">لبنان</span></div>
+            <div class="country-btn" data-code="965"><span class="code">+965</span><span class="name">الكويت</span></div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-wrap">
+                <span class="prefix" id="fbPrefix">+20</span>
+                <input type="text" id="fbPhoneInput" placeholder="أدخل رقم الهاتف لكشف الفيسبوك..." dir="ltr">
+            </div>
+            <button class="btn-search btn-fb" onclick="searchByFacebook()">
+                <i class="fab fa-facebook"></i> كشف فيسبوك
+            </button>
+        </div>
+    </div>
+
+    <!-- اللودر والنتائج -->
+    <div class="loader-area" id="loaderArea">
+        <div class="spinner"></div>
+        <p>جاري البحث في المصادر...</p>
+    </div>
+    <div class="results-area" id="resultsArea"></div>
+
+    <!-- الفوتر -->
+    <div class="footer">
+        <div class="dev-name">𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵. 𖣈</div>
+        <a href="https://t.me/rarkoy" target="_blank" class="dev-handle">
+            <i class="fas fa-code"></i> rarkoy@
+        </a>
+        <div class="copyright">جميع الحقوق محفوظة © SIN OSINT</div>
+    </div>
+
+</div>
+
+<script>
+// ============ المتغيرات العامة ============
+let selectedCode = "20";
+let fbSelectedCode = "20";
+let isSearching = false;
+
+// ============ اختيار الدولة (البحث بالرقم) ============
+document.querySelectorAll("#countryGrid .country-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        document.querySelectorAll("#countryGrid .country-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        selectedCode = this.dataset.code;
+        document.getElementById("phonePrefix").textContent = "+" + selectedCode;
+    });
+});
+
+// ============ اختيار الدولة (البحث بالفيسبوك) ============
+document.querySelectorAll("#countryGridFb .country-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        document.querySelectorAll("#countryGridFb .country-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        fbSelectedCode = this.dataset.code;
+        document.getElementById("fbPrefix").textContent = "+" + fbSelectedCode;
+    });
+});
+
+// ============ IP Info (من API مجاني) ============
+async function loadIPInfo() {
+    try {
+        const res = await fetch("https://ipwho.is/");
+        const data = await res.json();
+        document.getElementById("userIP").textContent = data.ip || "غير معروف";
+        document.getElementById("userCountry").textContent = data.country || "غير معروف";
+        document.getElementById("userCity").textContent = data.city || "غير معروف";
+        document.getElementById("userISP").textContent = data.connection?.isp || "غير معروف";
+    } catch (e) {
+        document.getElementById("userIP").textContent = "خطأ في التحميل";
+    }
+}
+loadIPInfo();
+
+// ============ الدالة الموحدة للبحث عبر API ============
+async function callSearchAPI(code, phone) {
+    const API_URL = "https://caller-uegx.vercel.app/api/search";
+    
+    const payload = { code: code, phone: phone };
+    const headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    };
+
+    // محاولة 1: طلب مباشر
+    try {
+        const res = await fetch(API_URL, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) return await res.json();
+    } catch (e) { /* تجاهل */ }
+
+    // محاولة 2: عبر CORS Proxy (allorigins)
+    try {
+        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(API_URL);
+        const res2 = await fetch(proxyUrl, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(payload)
+        });
+        if (res2.ok) return await res2.json();
+    } catch (e) { /* تجاهل */ }
+
+    // محاولة 3: عبر corsproxy.io
+    try {
+        const proxyUrl3 = "https://corsproxy.io/?url=" + encodeURIComponent(API_URL);
+        const res3 = await fetch(proxyUrl3, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(payload)
+        });
+        if (res3.ok) return await res3.json();
+    } catch (e) { /* تجاهل */ }
+
+    return null;
+}
+
+// ============ استخراج الاسم من الرد ============
+function extractName(data) {
+    if (!data || typeof data !== "object") return null;
+    const keys = ["name", "full_name", "owner", "first_name", "fullname", "الاسم", "اسم", "result"];
+    for (const k of keys) {
+        if (data[k] && typeof data[k] === "string" && data[k].length > 1) return data[k];
+    }
+    if (Array.isArray(data.results)) {
+        for (const item of data.results) {
+            if (item && typeof item === "object") {
+                for (const k of keys) {
+                    if (item[k] && typeof item[k] === "string") return item[k];
+                }
+            }
+        }
+    }
+    return null;
+}
+
+// ============ استخراج روابط الفيسبوك ============
+function extractFacebookLinks(data) {
+    const links = [];
+    if (!data) return links;
+    const text = JSON.stringify(data).toLowerCase();
+    const patterns = [
+        /https?:\/\/(www\.)?facebook\.com\/[^\s"']+/g,
+        /https?:\/\/(www\.)?fb\.com\/[^\s"']+/g,
+        /https?:\/\/m\.facebook\.com\/[^\s"']+/g
+    ];
+    for (const p of patterns) {
+        const m = JSON.stringify(data).match(p);
+        if (m) links.push(...m);
+    }
+    return [...new Set(links)];
+}
+
+// ============ عرض النتائج ============
+function renderResults(data, phone, code, mode) {
+    const resultsArea = document.getElementById("resultsArea");
+    resultsArea.className = "results-area active";
+
+    if (!data) {
+        resultsArea.innerHTML = `
+            <div class="result-item">
+                <div class="no-results">
+                    <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;"></i>
+                    لم يتم العثور على نتائج. حاول مرة أخرى.
+                </div>
+            </div>`;
+        return;
+    }
+
+    const name = extractName(data);
+    const fbLinks = extractFacebookLinks(data);
+    const fullPhone = "+" + code + " " + phone;
+    const cleanPhone = code + phone;
+    let html = "";
+
+    // رأس النتيجة
+    html += `
+        <div class="result-header">
+            <div class="item"><div class="lbl">الرقم</div><div class="val">${fullPhone}</div></div>
+            <div class="item"><div class="lbl">الدولة</div><div class="val">+${code}</div></div>
+            <div class="item"><div class="lbl">النتائج</div><div class="val">${data.results ? data.results.length : 1}</div></div>
+        </div>`;
+
+    // أزرار سريعة
+    html += `
+        <div class="btn-group">
+            <a class="btn-action btn-wa" href="https://wa.me/${cleanPhone}" target="_blank">
+                <i class="fab fa-whatsapp"></i> واتساب
+            </a>
+            <a class="btn-action btn-tg" href="https://t.me/+${cleanPhone}" target="_blank">
+                <i class="fab fa-telegram"></i> تليجرام
+            </a>
+        </div>`;
+
+    // الاسم
+    if (name) {
+        html += `
+            <div class="result-item">
+                <div class="row"><span class="key">👤 الاسم</span><span class="val">${name}</span></div>
+            </div>`;
+    }
+
+    // فيسبوك
+    if (fbLinks.length > 0) {
+        html += `
+            <div class="result-item fb-highlight">
+                <div class="row">
+                    <span class="key"><i class="fab fa-facebook"></i> حساب فيسبوك</span>
+                    <span class="val">مرتبط ✅</span>
+                </div>`;
+        fbLinks.forEach(link => {
+            html += `
+                <div class="row">
+                    <span class="key">🔗 الرابط</span>
+                    <span class="val"><a class="fb-link" href="${link}" target="_blank">${link}</a></span>
+                </div>
+                <div class="row" style="padding-top:10px;">
+                    <a class="btn-action btn-fb-open" style="width:100%;" href="${link}" target="_blank">
+                        <i class="fab fa-facebook"></i> فتح الحساب
+                    </a>
+                </div>`;
+        });
+        html += `</div>`;
+    } else if (mode === "fb") {
+        html += `
+            <div class="result-item">
+                <div class="no-results">
+                    <i class="fab fa-facebook"></i>
+                    لم يتم العثور على حساب فيسبوك مرتبط بهذا الرقم.
+                </div>
+            </div>`;
+    }
+
+    // كل الحقول الأخرى
+    const skipKeys = ["name", "full_name", "owner", "first_name", "fullname", "الاسم", "اسم", "results"];
+    const otherRows = [];
+    for (const [k, v] of Object.entries(data)) {
+        if (skipKeys.includes(k)) continue;
+        if (v === null || v === undefined || v === "" || v === "N/A") continue;
+        if (Array.isArray(v)) {
+            v.forEach((item, idx) => {
+                if (typeof item === "object" && item !== null) {
+                    for (const [sk, sv] of Object.entries(item)) {
+                        if (sv && sv !== "N/A" && sv !== "null") {
+                            otherRows.push([`${k}[${idx+1}] - ${sk}`, sv]);
+                        }
+                    }
+                } else if (item) {
+                    otherRows.push([`${k}[${idx+1}]`, item]);
+                }
+            });
+        } else if (typeof v === "object") {
+            for (const [sk, sv] of Object.entries(v)) {
+                if (sv && sv !== "N/A" && sv !== "null") otherRows.push([`${k}.${sk}`, sv]);
+            }
+        } else {
+            otherRows.push([k, v]);
+        }
+    }
+
+    if (otherRows.length > 0) {
+        html += `<div class="result-item">`;
+        otherRows.forEach(([k, v]) => {
+            const isFbValue = String(v).toLowerCase().includes("facebook") || String(v).toLowerCase().includes("fb.com");
+            const valDisplay = isFbValue
+                ? `<a class="fb-link" href="${v}" target="_blank">${v}</a>`
+                : v;
+            html += `<div class="row"><span class="key">${k}</span><span class="val">${valDisplay}</span></div>`;
+        });
+        html += `</div>`;
+    }
+
+    resultsArea.innerHTML = html;
+    resultsArea.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ============ البحث بالرقم ============
+async function searchByPhone() {
+    if (isSearching) return;
+    let phone = document.getElementById("phoneInput").value.trim().replace(/[^0-9]/g, "");
+    if (!phone || phone.length < 6) {
+        alert("⚠️ أدخل رقم صحيح (6 أرقام على الأقل)");
+        return;
+    }
+    if (phone.startsWith("0")) phone = phone.substring(1);
+
+    isSearching = true;
+    const loader = document.getElementById("loaderArea");
+    const results = document.getElementById("resultsArea");
+    loader.style.display = "block";
+    results.className = "results-area";
+    results.innerHTML = "";
+
+    const data = await callSearchAPI(selectedCode, phone);
+
+    loader.style.display = "none";
+    isSearching = false;
+    renderResults(data, phone, selectedCode, "phone");
+}
+
+// ============ البحث بالفيسبوك ============
+async function searchByFacebook() {
+    if (isSearching) return;
+    let phone = document.getElementById("fbPhoneInput").value.trim().replace(/[^0-9]/g, "");
+    if (!phone || phone.length < 6) {
+        alert("⚠️ أدخل رقم صحيح (6 أرقام على الأقل)");
+        return;
+    }
+    if (phone.startsWith("0")) phone = phone.substring(1);
+
+    isSearching = true;
+    const loader = document.getElementById("loaderArea");
+    const results = document.getElementById("resultsArea");
+    loader.style.display = "block";
+    results.className = "results-area";
+    results.innerHTML = "";
+
+    const data = await callSearchAPI(fbSelectedCode, phone);
+
+    loader.style.display = "none";
+    isSearching = false;
+    renderResults(data, phone, fbSelectedCode, "fb");
+}
+
+// ============ Enter key ============
+document.getElementById("phoneInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") searchByPhone();
+});
+document.getElementById("fbPhoneInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") searchByFacebook();
+});
+</script>
+
+</body>
+</html>
