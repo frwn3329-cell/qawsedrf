@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵. 𖣈 — OSINT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--accent:#d4af37;--accent-light:#f0d060;--accent-dark:#a8882a;--black:#0a0a0a;--dark-card:rgba(17,17,30,0.92);--white:#f5f5f5;--text-muted:#8888aa;--border-accent:1px solid rgba(212,175,55,0.3);--shadow-accent:0 0 40px rgba(212,175,55,0.15);--radius:20px}
+body.theme-gold{--accent:#d4af37;--accent-light:#f0d060;--accent-dark:#a8882a;--border-accent:1px solid rgba(212,175,55,0.3);--shadow-accent:0 0 40px rgba(212,175,55,0.15)}
+body.theme-red{--accent:#ff3b3b;--accent-light:#ff7070;--accent-dark:#b71c1c;--border-accent:1px solid rgba(255,59,59,0.35);--shadow-accent:0 0 40px rgba(255,59,59,0.2)}
+body.theme-blue{--accent:#38bdf8;--accent-light:#7dd3fc;--accent-dark:#0284c7;--border-accent:1px solid rgba(56,189,248,0.35);--shadow-accent:0 0 40px rgba(56,189,248,0.2)}
+body.theme-purple{--accent:#a855f7;--accent-light:#c084fc;--accent-dark:#7e22ce;--border-accent:1px solid rgba(168,85,247,0.35);--shadow-accent:0 0 40px rgba(168,85,247,0.2)}
+body{font-family:'Cairo',sans-serif;background:var(--black);color:var(--white);min-height:100vh;overflow-x:hidden}
+.bg-particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 20% 50%,var(--shadow-accent) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,var(--shadow-accent) 0%,transparent 50%)}
+.bg-particles::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(2px 2px at 10% 20%,var(--accent),transparent),radial-gradient(2px 2px at 30% 60%,var(--accent),transparent),radial-gradient(2px 2px at 50% 10%,var(--accent),transparent),radial-gradient(2px 2px at 70% 80%,var(--accent),transparent),radial-gradient(2px 2px at 90% 40%,var(--accent),transparent);background-size:100% 100%;animation:sparkle 4s linear infinite;opacity:.4}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;animation:fall linear infinite;box-shadow:0 0 6px var(--accent)}
+@keyframes fall{0%{transform:translateY(-100vh);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
+@keyframes sparkle{0%,100%{opacity:.3}50%{opacity:.7}}
+.container{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:20px}
+.header{text-align:center;padding:20px 20px 15px}
+.theme-switcher{display:flex;justify-content:center;gap:10px;margin-bottom:15px}
+.theme-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);cursor:pointer;transition:all .3s}
+.theme-btn:hover,.theme-btn.active{transform:scale(1.2);border-color:#fff;box-shadow:0 0 20px currentColor}
+.theme-btn.t-gold{background:linear-gradient(135deg,#d4af37,#a8882a)}
+.theme-btn.t-red{background:linear-gradient(135deg,#ff3b3b,#b71c1c)}
+.theme-btn.t-blue{background:linear-gradient(135deg,#38bdf8,#0284c7)}
+.theme-btn.t-purple{background:linear-gradient(135deg,#a855f7,#7e22ce)}
+.owner-name{font-size:34px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,var(--accent),#fff8dc,var(--accent-light),var(--accent));background-size:400% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ownerGlow 3s linear infinite;filter:drop-shadow(0 0 15px var(--accent));display:inline-block}
+@keyframes ownerGlow{0%{background-position:0% center;filter:drop-shadow(0 0 15px var(--accent))}50%{filter:drop-shadow(0 0 40px var(--accent))}100%{background-position:400% center;filter:drop-shadow(0 0 15px var(--accent))}}
+.owner-name::before,.owner-name::after{content:'✦';color:var(--accent);margin:0 14px;font-size:22px;animation:sparkleStar 2s ease-in-out infinite;display:inline-block}
+.owner-name::after{animation-delay:1s}
+@keyframes sparkleStar{0%,100%{opacity:.4;transform:scale(.9) rotate(0)}50%{opacity:1;transform:scale(1.3) rotate(180deg);text-shadow:0 0 30px var(--accent)}}
+.sub-title{color:var(--text-muted);font-size:13px;margin-top:6px;letter-spacing:2px}
+.dev-contact{margin-top:12px;font-size:14px;color:var(--text-muted);font-weight:600}
+.dev-link{display:inline-flex;align-items:center;gap:8px;padding:8px 22px;margin-top:8px;border:1px solid var(--accent);border-radius:30px;background:rgba(255,255,255,0.03);color:var(--accent);font-weight:800;font-size:15px;text-decoration:none;letter-spacing:1px;transition:all .4s;box-shadow:0 0 20px var(--shadow-accent)}
+.dev-link:hover{background:rgba(255,255,255,0.08);box-shadow:0 0 50px var(--shadow-accent);transform:scale(1.05)}
+.badge-line{display:flex;justify-content:center;gap:10px;margin-top:15px;flex-wrap:wrap}
+.badge{padding:6px 18px;border:var(--border-accent);border-radius:30px;font-size:11px;font-weight:700;color:var(--accent);background:rgba(255,255,255,0.03)}
+.hero-section{display:flex;justify-content:center;align-items:center;padding:25px 0}
+.hero-circle{position:relative;width:190px;height:190px;display:flex;justify-content:center;align-items:center}
+.hero-circle .ring{position:absolute;width:100%;height:100%;border-radius:50%;border:3px solid transparent;animation:spinRing 6s linear infinite}
+.hero-circle .ring:nth-child(1){border-top-color:var(--accent);animation-duration:4s}
+.hero-circle .ring:nth-child(2){border-right-color:var(--accent-light);animation-duration:5s;animation-direction:reverse;width:110%;height:110%;top:-5%;left:-5%}
+.hero-circle .ring:nth-child(3){border-bottom-color:var(--accent);animation-duration:3.5s;width:120%;height:120%;top:-10%;left:-10%}
+.hero-circle .ring:nth-child(4){border-left-color:var(--accent-dark);animation-duration:4.5s;animation-direction:reverse;width:90%;height:90%;top:5%;left:5%}
+@keyframes spinRing{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.center-image{width:145px;height:145px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#1a1a2e,#0a0a12);border:3px solid var(--accent);display:flex;justify-content:center;align-items:center;box-shadow:0 0 60px var(--shadow-accent),inset 0 0 30px var(--shadow-accent);transition:all .5s;overflow:hidden;z-index:2;animation:pulseImage 3s ease-in-out infinite}
+@keyframes pulseImage{0%,100%{box-shadow:0 0 60px var(--shadow-accent),inset 0 0 30px var(--shadow-accent);transform:scale(1)}50%{box-shadow:0 0 100px var(--shadow-accent),inset 0 0 50px var(--shadow-accent);transform:scale(1.04)}}
+.center-image img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.card{background:var(--dark-card);backdrop-filter:blur(20px);border:var(--border-accent);border-radius:var(--radius);padding:30px 26px 26px;margin-bottom:22px;box-shadow:var(--shadow-accent);transition:all .4s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);transition:left .8s}
+.card:hover::before{left:100%}
+.card:hover{border-color:var(--accent)}
+.card .title-area{text-align:center;margin-bottom:20px}
+.card .title-area h2{font-size:22px;font-weight:800;color:var(--white)}
+.card .title-area h2 i{color:var(--accent);margin-left:10px}
+.card .title-area p{color:var(--text-muted);font-size:13px;margin-top:5px}
+.ip-info{background:var(--dark-card);border:var(--border-accent);border-radius:var(--radius);padding:18px 22px;margin-bottom:22px}
+.ip-info .title{color:var(--accent);font-size:16px;font-weight:800;margin-bottom:12px;text-align:center}
+.ip-info .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.ip-info .row:last-child{border-bottom:none}
+.ip-info .key{color:var(--text-muted);font-weight:700;font-size:12px}
+.ip-info .val{color:var(--white);font-weight:600;font-size:12px;text-align:left}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:25px}
+.stat-item{background:var(--dark-card);border:var(--border-accent);border-radius:16px;padding:16px 10px;text-align:center;backdrop-filter:blur(10px);transition:all .4s}
+.stat-item:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:var(--shadow-accent)}
+.stat-item .num{font-size:26px;font-weight:900;color:var(--accent)}
+.stat-item .lbl{font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:600}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;margin-bottom:18px}
+.country-btn{padding:10px 4px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:12px;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;transition:all .3s;text-align:center}
+.country-btn:hover{background:rgba(255,255,255,0.05);border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.country-btn.active{background:rgba(255,255,255,0.08);border-color:var(--accent);color:var(--accent);box-shadow:0 0 25px var(--shadow-accent)}
+.country-btn .code{display:block;font-size:15px;font-weight:900;color:var(--white)}
+.country-btn .name{font-size:9px;opacity:.6}
+.country-btn.active .code{color:var(--accent)}
+.input-row{display:flex;gap:12px;flex-wrap:wrap}
+.input-wrap{flex:1;min-width:200px;position:relative}
+.input-wrap .prefix{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:800;font-size:14px;pointer-events:none}
+.input-wrap input{width:100%;padding:16px 55px 16px 18px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:var(--white);font-size:16px;transition:all .4s;direction:ltr;text-align:right;font-weight:600;font-family:'Cairo',sans-serif}
+.input-wrap input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 30px var(--shadow-accent)}
+.input-wrap input::placeholder{color:#555}
+.btn-search{padding:16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border:none;border-radius:14px;color:#000;font-size:16px;font-weight:900;cursor:pointer;transition:all .4s;display:flex;align-items:center;gap:10px;white-space:nowrap;letter-spacing:1px;font-family:'Cairo',sans-serif}
+.btn-search:hover{transform:scale(1.03);box-shadow:0 0 60px var(--shadow-accent)}
+.btn-search:disabled{opacity:.5;cursor:not-allowed}
+.search-hint{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.05)}
+.search-hint .hint{color:var(--text-muted);font-size:12px;font-weight:600}
+.loader-area{display:none;text-align:center;padding:50px 20px}
+.spinner{width:55px;height:55px;border:3px solid rgba(255,255,255,0.05);border-top:3px solid var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.loader-area p{color:var(--text-muted);font-weight:600;font-size:14px}
+.results-area{display:none;margin-top:22px}
+.results-area.active{display:block;animation:fadeIn .5s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.result-item{background:rgba(0,0,0,0.35);border-radius:14px;padding:18px 20px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);border-right:4px solid var(--accent);transition:all .4s}
+.result-item:hover{background:rgba(0,0,0,0.55);transform:translateX(-6px);border-color:var(--accent)}
+.result-item .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.result-item .row:last-child{border-bottom:none}
+.result-item .key{color:var(--text-muted);font-size:13px;font-weight:700}
+.result-item .val{color:var(--white);font-size:13px;text-align:left;font-weight:600;word-break:break-all}
+.footer{text-align:center;padding:25px 20px 15px;border-top:1px solid rgba(255,255,255,0.03);margin-top:25px}
+.footer .dev-info{color:var(--text-muted);font-size:13px;font-weight:600}
+.footer .dev-info .highlight{color:var(--accent);font-weight:800}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dark-card);border:var(--border-accent);border-radius:14px;padding:12px 24px;color:var(--accent);font-weight:700;box-shadow:var(--shadow-accent);z-index:9999;transition:transform .4s;backdrop-filter:blur(10px)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:768px){.container{padding:15px}.card{padding:22px 16px}.input-row{flex-direction:column}.btn-search{width:100%;justify-content:center}.stats{grid-template-columns:repeat(2,1fr)}.owner-name{font-size:22px}.owner-name::before,.owner-name::after{font-size:14px;margin:0 8px}.hero-circle{width:155px;height:155px}.center-image{width:120px;height:120px}}
+@media(max-width:480px){.owner-name{font-size:17px}.center-image{width:105px;height:105px}.stat-item .num{font-size:20px}}
+</style>
+</head>
+<body class="theme-gold">
+<div class="bg-particles"></div>
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <div class="header">
+    <div class="theme-switcher">
+      <div class="theme-btn t-gold active" data-theme="theme-gold"></div>
+      <div class="theme-btn t-red" data-theme="theme-red"></div>
+      <div class="theme-btn t-blue" data-theme="theme-blue"></div>
+      <div class="theme-btn t-purple" data-theme="theme-purple"></div>
+    </div>
+
+    <div class="owner-name">𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵. 𖣈</div>
+    <div class="sub-title">OSINT • البحث الشامل عن الأرقام</div>
+
+    <div class="dev-contact">
+      للتواصل مع المطور<br>
+      <a href="https://t.me/rarkoy" target="_blank" class="dev-link"><i class="fab fa-telegram"></i> @rarkoy</a>
+    </div>
+
+    <div class="badge-line">
+      <span class="badge"><i class="fas fa-shield-alt"></i> آمن</span>
+      <span class="badge"><i class="fas fa-bolt"></i> فوري</span>
+      <span class="badge"><i class="fas fa-globe"></i> +70 دولة</span>
+      <span class="badge"><i class="fas fa-crown"></i> احترافي</span>
+    </div>
+  </div>
+
+  <div class="hero-section">
+    <div class="hero-circle">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="center-image">
+        <img src="https://img-mom.bitibiti.workers.dev/img/AgACAgQAAxkBAAItW2p4D9MbUhdTDf1STZP-jqUCZriZAAIXD2sbz7rBU-4Iy41fr1asAQADAgADeQADPQQ" alt="𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵">
+      </div>
+    </div>
+  </div>
+
+  <div class="ip-info">
+    <div class="title"><i class="fas fa-network-wired"></i> معلومات اتصالك</div>
+    <div class="row"><span class="key">📍 عنوان IP</span><span class="val" id="userIP">جاري التحميل...</span></div>
+    <div class="row"><span class="key">🚩 الدولة</span><span class="val" id="userCountry">جاري التحميل...</span></div>
+    <div class="row"><span class="key">🏙️ المدينة</span><span class="val" id="userCity">جاري التحميل...</span></div>
+    <div class="row"><span class="key">📡 المزود</span><span class="val" id="userISP">جاري التحميل...</span></div>
+    <div class="row"><span class="key">🌍 المنطقة</span><span class="val" id="userRegion">جاري التحميل...</span></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item"><div class="num" id="statCache">0</div><div class="lbl">📊 نتائج</div></div>
+    <div class="stat-item"><div class="num" id="statSearches">0</div><div class="lbl">🔍 عمليات بحث</div></div>
+    <div class="stat-item"><div class="num" id="statUsers">0</div><div class="lbl">👥 مستخدمين</div></div>
+    <div class="stat-item"><div class="num" id="statActive">0</div><div class="lbl">📡 نشطين</div></div>
+  </div>
+
+  <div class="card">
+    <div class="title-area">
+      <h2><i class="fas fa-search"></i> البحث عن أي رقم هاتف</h2>
+      <p>ابحث في أكثر من 70 دولة حول العالم</p>
+    </div>
+    <div class="country-grid" id="countryGrid">
+      <div class="country-btn active" data-code="964"><span class="code">+964</span><span class="name">العراق</span></div>
+      <div class="country-btn" data-code="966"><span class="code">+966</span><span class="name">السعودية</span></div>
+      <div class="country-btn" data-code="971"><span class="code">+971</span><span class="name">الإمارات</span></div>
+      <div class="country-btn" data-code="962"><span class="code">+962</span><span class="name">الأردن</span></div>
+      <div class="country-btn" data-code="20"><span class="code">+20</span><span class="name">مصر</span></div>
+      <div class="country-btn" data-code="961"><span class="code">+961</span><span class="name">لبنان</span></div>
+      <div class="country-btn" data-code="967"><span class="code">+967</span><span class="name">اليمن</span></div>
+      <div class="country-btn" data-code="965"><span class="code">+965</span><span class="name">الكويت</span></div>
+      <div class="country-btn" data-code="974"><span class="code">+974</span><span class="name">قطر</span></div>
+      <div class="country-btn" data-code="973"><span class="code">+973</span><span class="name">البحرين</span></div>
+      <div class="country-btn" data-code="968"><span class="code">+968</span><span class="name">عمان</span></div>
+      <div class="country-btn" data-code="218"><span class="code">+218</span><span class="name">ليبيا</span></div>
+      <div class="country-btn" data-code="216"><span class="code">+216</span><span class="name">تونس</span></div>
+      <div class="country-btn" data-code="213"><span class="code">+213</span><span class="name">الجزائر</span></div>
+      <div class="country-btn" data-code="212"><span class="code">+212</span><span class="name">المغرب</span></div>
+      <div class="country-btn" data-code="249"><span class="code">+249</span><span class="name">السودان</span></div>
+    </div>
+    <div class="input-row">
+      <div class="input-wrap">
+        <span class="prefix" id="phonePrefix">+964</span>
+        <input type="tel" id="phoneInput" placeholder="أدخل رقم الهاتف ..." dir="ltr" inputmode="numeric">
+      </div>
+      <button class="btn-search" id="searchBtn" onclick="startSearch()"><i class="fas fa-search"></i> بحث شامل</button>
+    </div>
+    <div class="search-hint">
+      <div class="hint"><i class="fas fa-cloud"></i> بحث مباشر • سريع • آمن</div>
+    </div>
+  </div>
+
+  <div class="loader-area" id="loaderArea">
+    <div class="spinner"></div>
+    <p>🔎 جاري البحث في جميع المحركات ...</p>
+  </div>
+
+  <div class="results-area" id="resultsArea"></div>
+
+  <div class="footer">
+    <div class="dev-info">
+      <span class="highlight">𝑭𝑯𝑨𝑹𝑨𝑶𝑯 𝑺𝑼𝑳𝑻𝑨𝑵. 𖣈</span>
+      <span style="color:#333;"> | </span>
+      <span style="color:#555;">جميع الحقوق محفوظة © 2025</span>
+      <span style="color:#333;"> | </span>
+      <a href="https://t.me/rarkoy" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:800;">@rarkoy</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========= الإعدادات =========
+const PROXY_URL = 'https://proxy3.thcjmkhkkbv.workers.dev';
+const API_URL = 'https://caller-uegx.vercel.app/api/search';
+
+let selectedCode = '964';
+let isSearching = false;
+
+// ========= نجوم =========
+(function(){
+  const box = document.getElementById('stars');
+  for (let i = 0; i < 40; i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + '%';
+    s.style.animationDuration = (5 + Math.random()*10) + 's';
+    s.style.animationDelay = (Math.random()*10) + 's';
+    s.style.opacity = 0.3 + Math.random()*0.7;
+    box.appendChild(s);
+  }
+})();
+
+// ========= الثيمات =========
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.body.className = btn.dataset.theme;
+    localStorage.setItem('theme', btn.dataset.theme);
+  });
+});
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme){
+  document.body.className = savedTheme;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === savedTheme));
+}
+
+// ========= توست =========
+function showToast(msg, color){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.color = color || 'var(--accent)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========= اختيار الدولة =========
+document.querySelectorAll('.country-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    selectedCode = this.dataset.code;
+    document.getElementById('phonePrefix').textContent = '+' + selectedCode;
+  });
+});
+
+// ========= IP =========
+async function loadIPInfo(){
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    document.getElementById('userIP').textContent = data.ip || 'غير معروف';
+    document.getElementById('userCountry').textContent = data.country_name || 'غير معروف';
+    document.getElementById('userCity').textContent = data.city || 'غير معروف';
+    document.getElementById('userISP').textContent = data.org || 'غير معروف';
+    document.getElementById('userRegion').textContent = data.region || 'غير معروف';
+  } catch(e){
+    document.getElementById('userIP').textContent = 'تعذر التحميل';
+  }
+}
+loadIPInfo();
+
+// ========= إحصائيات (حقيقية محلية) =========
+function updateStats(){
+  let users = parseInt(localStorage.getItem('sin_users') || '0');
+  if (!sessionStorage.getItem('sin_counted')){
+    users++;
+    localStorage.setItem('sin_users', users);
+    sessionStorage.setItem('sin_counted', '1');
+  }
+  document.getElementById('statUsers').textContent = users;
+  document.getElementById('statSearches').textContent = parseInt(localStorage.getItem('sin_searches') || '0');
+  document.getElementById('statCache').textContent = parseInt(localStorage.getItem('sin_results') || '0');
+  document.getElementById('statActive').textContent = Math.max(1, Math.floor(users / 10));
+}
+updateStats();
+
+// ========= البحث =========
+async function startSearch(){
+  if (isSearching) return;
+  let phone = document.getElementById('phoneInput').value.trim();
+  if (!phone){ showToast('⚠️ الرجاء إدخال رقم الهاتف', '#ff6b6b'); return; }
+
+  phone = phone.replace(/[^0-9+]/g, '');
+  if (phone.startsWith('+')){
+    const match = phone.match(/^\+(\d{1,3})(\d+)/);
+    if (match){
+      selectedCode = match[1];
+      phone = match[2];
+      document.querySelectorAll('.country-btn').forEach(b => b.classList.toggle('active', b.dataset.code === selectedCode));
+      document.getElementById('phonePrefix').textContent = '+' + selectedCode;
+    }
+  }
+  phone = phone.replace(/^0+/, '');
+  if (!phone || phone.length < 6){ showToast('⚠️ الرقم قصير جداً', '#ff6b6b'); return; }
+
+  isSearching = true;
+  const loader = document.getElementById('loaderArea');
+  const results = document.getElementById('resultsArea');
+  const searchBtn = document.getElementById('searchBtn');
+
+  loader.style.display = 'block';
+  results.className = 'results-area';
+  results.innerHTML = '';
+  searchBtn.disabled = true;
+
+  let json = null;
+  let errorMsg = '';
+
+  try {
+    const targetUrl = encodeURIComponent(API_URL);
+    const proxyUrl = `${PROXY_URL}?url=${targetUrl}`;
+
+    const res = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: selectedCode, phone: phone })
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    try { json = JSON.parse(text); } catch(e) { errorMsg = 'رد غير صالح من الخادم'; }
+  } catch(err){
+    errorMsg = err.message;
+    console.error(err);
+  }
+
+  loader.style.display = 'none';
+  searchBtn.disabled = false;
+  isSearching = false;
+  results.className = 'results-area active';
+
+  if (!json){
+    results.innerHTML = `
+      <div style="text-align:center;padding:35px;background:rgba(255,59,59,0.08);border:1px solid rgba(255,59,59,0.3);border-radius:16px;color:#ff6b6b;">
+        <i class="fas fa-exclamation-triangle" style="font-size:32px;margin-bottom:12px;"></i>
+        <div style="font-weight:700;">${errorMsg || 'تعذّر الاتصال بالخادم، حاول مرة أخرى'}</div>
+      </div>`;
+    return;
+  }
+
+  let searches = parseInt(localStorage.getItem('sin_searches') || '0');
+  localStorage.setItem('sin_searches', searches + 1);
+
+  renderResults(json, '+' + selectedCode + phone);
+  updateStats();
+}
+
+// ========= استخراج الاسم =========
+function extractName(data){
+  if (!data || typeof data !== 'object') return null;
+  const keys = ['name','full_name','owner','first_name','last_name','fullname','owner_name','result','الاسم','اسم'];
+  for (const k of keys){
+    if (data[k] && typeof data[k] === 'string' && data[k].length > 1 && !/^\d+$/.test(data[k])){
+      return data[k];
+    }
+  }
+  if (Array.isArray(data.results)){
+    for (const item of data.results){
+      if (item && typeof item === 'object'){
+        for (const k of keys){
+          if (item[k] && typeof item[k] === 'string' && item[k].length > 1 && !/^\d+$/.test(item[k])){
+            return item[k];
+          }
+        }
+      }
+    }
+  }
+  for (const [k, v] of Object.entries(data)){
+    if (typeof v === 'string' && v.length > 3 && !/^\d+$/.test(v) && !/^\d{4}-\d{2}-\d{2}/.test(v)){
+      return v;
+    }
+  }
+  return null;
+}
+
+// ========= عرض النتائج =========
+function renderResults(data, phoneDisplay){
+  const name = extractName(data);
+
+  let html = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;background:rgba(0,0,0,0.35);border-radius:14px;padding:14px 18px;margin-bottom:16px;border:var(--border-accent);">
+      <div style="text-align:center;">
+        <div style="color:var(--text-muted);font-size:10px;font-weight:700;">📱 الرقم</div>
+        <div style="color:var(--accent);font-size:15px;font-weight:900;direction:ltr;">${phoneDisplay}</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="color:var(--text-muted);font-size:10px;font-weight:700;">🔎 المصدر</div>
+        <div style="font-size:13px;font-weight:700;color:#4ade80;">مباشر</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="color:var(--text-muted);font-size:10px;font-weight:700;">👤 الحالة</div>
+        <div style="color:${name ? '#4ade80' : '#ff6b6b'};font-size:13px;font-weight:900;">${name ? '✅ معروف' : '❌ مجهول'}</div>
+      </div>
+    </div>
+  `;
+
+  if (name){
+    html += `
+      <div style="background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));border:2px solid var(--accent);border-radius:18px;padding:24px;text-align:center;margin-bottom:16px;box-shadow:0 0 40px var(--shadow-accent);animation:fadeIn .6s;">
+        <div style="font-size:48px;margin-bottom:10px;">👤</div>
+        <div style="color:var(--text-muted);font-size:12px;font-weight:700;letter-spacing:2px;margin-bottom:6px;">الاسم المُستخرج</div>
+        <div style="color:var(--accent);font-size:24px;font-weight:900;filter:drop-shadow(0 0 10px var(--accent));word-break:break-all;">${name}</div>
+      </div>
+    `;
+  }
+
+  const skipKeys = ['name','full_name','owner','first_name','last_name','fullname','owner_name','result','الاسم','اسم','results'];
+  const extraRows = [];
+  for (const [k, v] of Object.entries(data)){
+    if (skipKeys.includes(k)) continue;
+    if (v === null || v === undefined || v === '') continue;
+    if (typeof v === 'object') continue;
+    extraRows.push({ key: k, val: v });
+  }
+
+  if (Array.isArray(data.results) && data.results.length > 0){
+    data.results.forEach((item, idx) => {
+      if (!item || typeof item !== 'object') return;
+      const itemRows = [];
+      for (const [k, v] of Object.entries(item)){
+        if (v === null || v === undefined || v === '') continue;
+        if (typeof v === 'object') continue;
+        itemRows.push({ key: k, val: v });
+      }
+      if (itemRows.length === 0) return;
+      html += `<div class="result-item"><div style="color:var(--accent);font-size:12px;font-weight:900;margin-bottom:10px;">⭐ النتيجة ${idx + 1}</div>`;
+      itemRows.forEach(r => {
+        html += `<div class="row"><span class="key">${r.key}</span><span class="val">${r.val}</span></div>`;
+      });
+      html += `</div>`;
+    });
+  }
+
+  if (extraRows.length > 0 && !name){
+    html += `<div class="result-item">`;
+    extraRows.forEach(r => {
+      html += `<div class="row"><span class="key">${r.key}</span><span class="val">${r.val}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (!name && extraRows.length === 0 && (!data.results || data.results.length === 0)){
+    html += `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);background:rgba(0,0,0,0.3);border-radius:14px;border:1px solid rgba(255,255,255,0.05);">
+        <i class="fas fa-inbox" style="font-size:35px;display:block;margin-bottom:12px;color:var(--accent);"></i>
+        <div style="font-weight:700;">لا توجد نتائج لهذا الرقم</div>
+      </div>`;
+  }
+
+  const cleanPhone = phoneDisplay.replace('+', '').replace(/\s/g, '');
+  html += `
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+      <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1;background:#25D366;color:#fff;padding:12px;border-radius:12px;text-align:center;text-decoration:none;font-weight:800;min-width:120px;font-size:14px;"><i class="fab fa-whatsapp"></i> واتساب</a>
+      <a href="https://t.me/+${cleanPhone}" target="_blank" style="flex:1;background:#0088cc;color:#fff;padding:12px;border-radius:12px;text-align:center;text-decoration:none;font-weight:800;min-width:120px;font-size:14px;"><i class="fab fa-telegram"></i> تليجرام</a>
+    </div>
+  `;
+
+  const resultsArea = document.getElementById('resultsArea');
+  resultsArea.innerHTML = html;
+  resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ========= Enter =========
+document.getElementById('phoneInput').addEventListener('keypress', function(e){
+  if (e.key === 'Enter') startSearch();
+});
+</script>
+</body>
+</html>
